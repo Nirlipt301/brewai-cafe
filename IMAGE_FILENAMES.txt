@@ -1,0 +1,22 @@
+Put these JPG files inside static/images/ using EXACT capitalization:
+
+cappuccino.jpg
+americano.jpg
+mocha.jpg
+masala_chai.jpg
+mango_iced_tea.jpg
+Caramel_Iced_Latte.jpg
+Hazelnut_Cold_Coffee.jpg
+vanila_coldbrew.jpg
+Grilled_Sandwich.jpg
+panini.jpg
+garlic_bread.jpg
+periperi_fries.jpg
+nachos.jpg
+flatbread.jpg
+pasta.jpg
+Chocolate_Brownie.jpg
+Chocolate_Pastry.jpg
+cheesecake.jpg
+tiramisu.jpg
+slice.jpg

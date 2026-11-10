@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+{% block title %}Menu · BrewAI{% endblock %}
+{% block content %}
+<section class="menu-intro neat-menu">
+  <span class="eyebrow">OUR MENU</span>
+  <h1 class="page-title menu-title">Made for every mood.</h1>
+  <p class="lead menu-lead">From bold espresso to chilled favourites, savoury bites and something sweet for later.</p>
+
+  <div class="menu-search">
+    <span>🔍</span>
+    <input id="menuSearch" type="search" autocomplete="off" placeholder="Search coffee, chai, sandwich, dessert...">
+  </div>
+
+  <div class="menu-toolbar" aria-label="Menu filters">
+    <span>Browse:</span>
+    {% for cat,label in [('All','All'),('Coffee','☕ Coffee'),('Tea','🫖 Tea'),('Cold Drinks','🧊 Cold Drinks'),('Snacks','🥪 Snacks'),('Meals','🍕 Meals'),('Desserts','🍰 Desserts')] %}
+      <button type="button" class="category-chip {% if loop.first %}active{% endif %}" data-category="{{ cat }}">{{ label }}</button>
+    {% endfor %}
+  </div>
+
+  <div class="menu-result-line"><span id="resultCount"></span><button type="button" id="clearFilters" class="clear-filter hidden">Clear filters</button></div>
+
+  <div class="menu-grid" id="productGrid">
+    {% for p in products %}
+    <article class="card product-card" data-name="{{ p[1]|lower }} {{ p[3]|lower }}" data-category="{{ p[2] }}">
+      <div class="food menu-food">
+        <img src="{{ url_for('static',filename='images/'+p[5]) }}" alt="{{ p[1] }}" class="product-img">
+        {% if not availability.get(p[0],True) %}<span class="stock-badge">OUT OF STOCK</span>{% endif %}
+      </div>
+      <div class="menu-card-body">
+        <small>{{ p[2] }}</small>
+        <h3>{{ p[1] }}</h3>
+        <p>{{ p[3] }}</p>
+        <div class="row menu-card-bottom">
+          <b class="price">₹{{ p[4] }}</b>
+          {% if availability.get(p[0],True) %}
+            <button type="button" class="customize-btn" data-id="{{ p[0] }}" data-name="{{ p[1] }}" data-category="{{ p[2] }}" data-price="{{ p[4] }}">Customize +</button>
+          {% else %}
+            <button disabled>Unavailable</button>
+          {% endif %}
+        </div>
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+
+  <div id="noResults" class="no-menu-results hidden">No menu items match that search or filter.</div>
+</section>
+
+<div class="modal-backdrop hidden" id="customModal"><div class="custom-modal"><button class="modal-close" type="button">×</button><span class="eyebrow">CUSTOMIZE YOUR ORDER</span><h2 id="modalProduct">Product</h2><p id="modalBase"></p><form id="customForm" method="post"><div id="drinkOptions"><label>Size<select name="size"><option>Regular</option><option>Large</option></select></label><label>Sugar<select name="sugar"><option value="0">0 — No sugar</option><option value="1" selected>1 — Regular</option><option value="2">2 — Sweet</option></select></label><label>Milk<select name="milk"><option>Regular</option><option>Oat</option><option>Almond</option></select></label><label class="checkline"><input type="checkbox" name="extra_shot" value="yes"> Extra espresso shot +₹40</label></div><div id="foodOptions" class="hidden"><label>Add-on<select name="addon"><option>None</option><option>Extra Cheese</option><option>Extra Dip</option></select></label></div><button class="btn caramel wide" type="submit">Add customized item</button></form></div></div>
+
+<script>
+(() => {
+  const cards = [...document.querySelectorAll('.product-card')];
+  const search = document.getElementById('menuSearch');
+  const chips = [...document.querySelectorAll('.category-chip')];
+  const count = document.getElementById('resultCount');
+  const clear = document.getElementById('clearFilters');
+  const noResults = document.getElementById('noResults');
+  let active = 'All';
+
+  const params = new URLSearchParams(location.search);
+  search.value = params.get('search') || '';
+
+  function applyFilters() {
+    const q = search.value.toLowerCase().trim();
+    let visible = 0;
+    cards.forEach(card => {
+      const categoryMatch = active === 'All' || card.dataset.category === active;
+      const searchMatch = !q || card.dataset.name.includes(q);
+      const show = categoryMatch && searchMatch;
+      card.classList.toggle('filtered-out', !show);
+      if (show) visible++;
+    });
+    count.textContent = `${visible} item${visible === 1 ? '' : 's'}`;
+    clear.classList.toggle('hidden', active === 'All' && !q);
+    noResults.classList.toggle('hidden', visible !== 0);
+  }
+
+  search.addEventListener('input', applyFilters);
+  chips.forEach(button => button.addEventListener('click', () => {
+    chips.forEach(x => x.classList.remove('active'));
+    button.classList.add('active');
+    active = button.dataset.category;
+    applyFilters();
+  }));
+  clear.addEventListener('click', () => {
+    active = 'All'; search.value = '';
+    chips.forEach(x => x.classList.toggle('active', x.dataset.category === 'All'));
+    applyFilters();
+  });
+
+  const modal = document.getElementById('customModal');
+  const form = document.getElementById('customForm');
+  const drink = document.getElementById('drinkOptions');
+  const food = document.getElementById('foodOptions');
+  document.querySelectorAll('.customize-btn').forEach(button => button.addEventListener('click', () => {
+    document.getElementById('modalProduct').textContent = button.dataset.name;
+    document.getElementById('modalBase').textContent = 'Base price ₹' + button.dataset.price;
+    form.action = '/cart/add/' + button.dataset.id;
+    const isDrink = ['Coffee','Cold Drinks','Tea'].includes(button.dataset.category);
+    drink.classList.toggle('hidden', !isDrink);
+    food.classList.toggle('hidden', isDrink);
+    modal.classList.remove('hidden');
+  }));
+  document.querySelector('.modal-close').addEventListener('click', () => modal.classList.add('hidden'));
+  modal.addEventListener('click', e => { if (e.target === modal) modal.classList.add('hidden'); });
+  applyFilters();
+})();
+</script>
+{% endblock %}

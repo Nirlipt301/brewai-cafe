@@ -1,0 +1,35 @@
+{% extends 'base.html' %}{% block content %}
+<section class="hero home-hero"><div class="hero-copy" data-reveal><span class="eyebrow">AI-POWERED SMART CAFÉ</span><h1>Your mood.<br>Your brew.<br><em>Perfectly matched.</em></h1><p>BrewAI turns a café visit into something personal — intelligent recommendations, effortless ordering and rewards that learn what you love.</p><div class="actions"><a class="btn caramel" href="/menu">Explore the menu <span>→</span></a><a class="btn ghost" href="/ai-picks">Ask BrewAI <span>✦</span></a></div><div class="hero-proof"><div><b>3</b><span>connected portals</span></div><div><b>Live</b><span>kitchen tracking</span></div><div><b>10</b><span>points / ₹100</span></div></div></div><div class="hero-art hero-photo" data-reveal><div class="hero-image-wrap"><img data-parallax src="{{url_for('static',filename='images/Caramel_Iced_Latte.jpg')}}" alt="Caramel iced latte"></div><div class="float top"><span class="pulse-dot"></span> BrewAI pick · 94% match</div><div class="float rating"><span>4.8</span><small>customer favourite</small></div><div class="hero-orbit">✦</div></div></section>
+<section class="scroll-story" id="brewaiStory" aria-label="How BrewAI matches your mood">
+  <div class="story-stage">
+    <div class="story-bg-word story-bg-left">YOUR</div>
+    <div class="story-bg-word story-bg-right">BREW</div>
+    <div class="story-kicker">SCROLL TO FIND YOUR MATCH <span>↓</span></div>
+
+    <div class="story-chip chip-mood">MOOD <b>ENERGY</b></div>
+    <div class="story-chip chip-temp">TEMP <b>COLD</b></div>
+    <div class="story-chip chip-taste">TASTE <b>SWEET</b></div>
+    <div class="story-chip chip-budget">BUDGET <b>₹200</b></div>
+
+    <div class="story-product-shell">
+      <div class="story-halo halo-a"></div><div class="story-halo halo-b"></div>
+      <img src="{{url_for('static',filename='images/Caramel_Iced_Latte.jpg')}}" alt="Caramel iced latte selected by BrewAI" class="story-product">
+      <div class="story-ai-mark">✦<small>BREWAI</small></div>
+    </div>
+
+    <div class="story-thinking"><span></span><span></span><span></span><b>BrewAI is matching your mood</b></div>
+    <div class="story-result">
+      <span class="story-match">94% MATCH</span>
+      <h2>Caramel<br><em>Iced Latte.</em></h2>
+      <p>Cold · sweet · energising · under ₹200</p>
+      <a href="/ai-picks" class="btn light">Find my match →</a>
+    </div>
+    <div class="story-counter"><span id="storyStep">01</span><i></i><b>04</b></div>
+  </div>
+</section>
+<section class="marquee-band" aria-hidden="true"><div>COFFEE · COLD BREWS · BITES · DESSERTS · AI PICKS · REWARDS · COFFEE · COLD BREWS · BITES · DESSERTS · AI PICKS · REWARDS ·</div></section>
+<section class="editorial-section"><div class="section-head"><div><span class="eyebrow">CUSTOMER FAVOURITES</span><h2>The usuals.<br><em>Done beautifully.</em></h2></div><a class="section-link" href="/menu">View full menu <span>↗</span></a></div><div class="grid home-grid">{% for p in products %}<article class="card"><a class="food" href="/menu?search={{p[1]|urlencode}}"><img src="{{url_for('static',filename='images/'+p[5])}}" alt="{{p[1]}}" class="product-img"><span class="image-arrow">↗</span></a><small>{{p[2]}}</small><h3>{{p[1]}}</h3><p>{{p[3]}}</p><div class="row"><b class="price">₹{{p[4]}}</b><a class="card-link" href="/menu?search={{p[1]|urlencode}}">Make it yours</a></div></article>{% endfor %}</div></section>
+<section class="ai-showcase" data-reveal><div class="ai-visual"><div class="ai-ring ring-one"></div><div class="ai-ring ring-two"></div><div class="ai-core">✦<small>BREWAI</small></div><span class="signal s1">cold</span><span class="signal s2">sweet</span><span class="signal s3">₹200</span><span class="signal s4">energy</span></div><div class="ai-copy"><span class="eyebrow light-text">PERSONAL, NOT RANDOM</span><h2>A recommendation<br>with a reason.</h2><p>BrewAI scores the live menu against temperature, taste, hunger, dietary preference, mood and budget — then tells you exactly why it chose your match.</p><div class="match-demo"><b>94%</b><span><strong>Caramel Iced Latte</strong>Cold · sweet · energising · under ₹200</span></div><a class="btn light" href="/ai-picks">Find my match →</a></div></section>
+<section class="journey"><div class="section-head"><div><span class="eyebrow">ONE SYSTEM, THREE EXPERIENCES</span><h2>From craving<br>to counter.</h2></div></div><div class="journey-grid"><article class="journey-card"><span>01</span><h3>Order your way</h3><p>Delivery, pickup or scan a table QR and order without entering an address.</p></article><article class="journey-card"><span>02</span><h3>Kitchen goes live</h3><p>Your order appears in the Chef portal with every customization exactly as you chose it.</p></article><article class="journey-card"><span>03</span><h3>Track every step</h3><p>Confirmed → Preparing → Ready → Completed. The same status is shared across every portal.</p></article></div></section>
+<section class="rewards-teaser" data-reveal><div><span class="eyebrow">BREWAI REWARDS</span><h2>Your coffee habit<br><em>should give back.</em></h2><p>Earn BrewPoints, unlock free treats, receive birthday rewards and collect BrewWallet cashback on eligible demo card offers.</p><a class="btn caramel" href="/rewards">See my rewards →</a></div><div class="reward-stack"><div class="reward-ticket t1"><small>BREWPOINTS</small><b>500</b><span>FREE TREAT UNLOCKED</span></div><div class="reward-ticket t2"><small>BIRTHDAY WEEK</small><b>🎂</b><span>A LITTLE SOMETHING ON US</span></div></div></section>
+{% endblock %}
